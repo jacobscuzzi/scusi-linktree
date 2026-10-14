@@ -68,7 +68,7 @@
     line-height: 1.35;
   }
 
-  .motto span { display: block; }
+  .motto span { display: block; min-height: 1.35em; }
 
   section { margin-top: 3.5rem; }
 
@@ -139,7 +139,7 @@
 <main>
   <header>
     <h1 class="logo">scusi<span class="cursor" aria-hidden="true">_</span></h1>
-    <p class="motto"><span>real_people_</span><span>real_stories_</span></p>
+    <p class="motto" id="motto"><span>real_people_</span><span>real_stories_</span></p>
   </header>
 
   <section aria-labelledby="ig">
@@ -167,5 +167,30 @@
     </ul>
   </section>
 </main>
+<script>
+(function () {
+  var motto = document.getElementById("motto");
+  if (!motto || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  var lines = Array.prototype.slice.call(motto.children);
+  var texts = lines.map(function (el) { return el.textContent; });
+  motto.setAttribute("aria-label", texts.join(" "));
+  lines.forEach(function (el) { el.textContent = ""; el.setAttribute("aria-hidden", "true"); });
+
+  var line = 0, char = 0;
+  function type() {
+    if (line >= lines.length) return;
+    lines[line].textContent = texts[line].slice(0, ++char);
+    if (char === texts[line].length) {
+      line++;
+      char = 0;
+      setTimeout(type, 450);
+    } else {
+      setTimeout(type, 70 + Math.random() * 70);
+    }
+  }
+  setTimeout(type, 500);
+})();
+</script>
 </body>
 </html>
